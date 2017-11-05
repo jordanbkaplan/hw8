@@ -1,1 +1,1 @@
-def
+print ("whats up fam")
