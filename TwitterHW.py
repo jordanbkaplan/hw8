@@ -5,12 +5,12 @@ import requests
 import json
 import re
 import tweepy
-import twitter_info # still need this in the same directory, filled out
+import twitter_info_example # still need this in the same directory, filled out
 
-consumer_key = twitter_info.consumer_key
-consumer_secret = twitter_info.consumer_secret
-access_token = twitter_info.access_token
-access_token_secret = twitter_info.access_token_secret
+consumer_key = twitter_info_example.consumer_key
+consumer_secret = twitter_info_example.consumer_secret
+access_token = twitter_info_example.access_token
+access_token_secret = twitter_info_example.access_token_secret
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_token_secret)
 
@@ -21,9 +21,9 @@ api = tweepy.API(auth, parser=tweepy.parsers.JSONParser())
 CACHE_FNAME = "twitter_cache.json"
 try:
     cache_file = open(CACHE_FNAME,'r')
-        cache_contents = cache_file.read()
-        cache_file.close()
-        CACHE_DICTION = json.loads(cache_contents)
+    cache_contents = cache_file.read()
+    cache_file.close()
+    CACHE_DICTION = json.loads(cache_contents)
 except:
     CACHE_DICTION = {}
 
@@ -41,7 +41,7 @@ def get_tweets():
         print ('getting data from the internet')
         twitter_results=api.user_timeline('umsi')
         CACHE_DICTION['umsi']=twitter_results
-        f=open(CACHE_DICTION,"w")
+        f=open(CACHE_FNAME,"w")
         f.write(json.dumps(CACHE_DICTION))
         f.close()
     return twitter_results
@@ -56,7 +56,7 @@ for tw in umsi_tweets:
     tup= tw["id"], tw['user']['screen_name'], tw['created_at'], tw['text'], tw['retweet_count']
     cur.execute('INSERT INTO Tweets (tweet_id, author, time_posted, tweet_text, retweets) VALUES (?, ?, ?, ?, ?)',tup)
 conn.commit()
-cur.execute("SELECT time_posted, tweet_text, FROM Tweets")
+cur.execute("SELECT time_posted, tweet_text FROM Tweets")
 all_res = cur. fetchall()
 for t in all_res:
     print (t[0] + " - " + t[1] + "\n")
